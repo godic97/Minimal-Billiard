@@ -9,11 +9,10 @@ from PIL import Image
 wnd_width = 800
 wnd_height = 600
 
-# Light Properties
 Ld = [1, 1, 1, 0]
 Ls = [1, 1, 1, 0]
 La = [0.5, 0.5, 0.5, 0]
-# Material Properties
+
 Md = [1, 1, 0, 1]
 Ms = [1, 1, 1, 1]
 Ma = [0.5, 0.5, 0.5, 0]
@@ -128,7 +127,6 @@ def drawWall():
 def drawFloor():
     glColor3fv([1,1,1])
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, floorImgX, floorImgY, 0, GL_RGB, GL_UNSIGNED_BYTE, floorImg)
-
     glBegin(GL_QUADS)
     glTexCoord2fv([0, 1])
     glVertex3fv([-60, -5, -60])
@@ -186,20 +184,21 @@ def CalcBallPos():
         if(ballSpeed <= 0):
             isBallMove = False
             return
+
         ballPosX += ballSpeed * math.cos(ballAngle)
         ballPosZ += ballSpeed * math.sin(ballAngle)
+
         for i in range(0, len(poolWall)):
             dist = CalcDistBall2Wall(poolWall[i], ballPosX, ballPosY, ballPosZ)
             if(dist >= -1.05) :
                 if(i == 0 or i == 2):
                     ballAngle *= -1
+
                 if(i == 1 or i == 3):
                     ballAngle += math.pi
                     ballAngle *= -1
 
-# Initialization
 def GLinit():
-    # Color, z-buffer, light setup
     glClearColor(0, 0, 0, 0)
     glEnable(GL_COLOR_MATERIAL)
     glEnable(GL_DEPTH_TEST)
@@ -226,6 +225,7 @@ def keyboardEvent(key, x, y):
         if(isLightOn == False):
             glEnable(GL_LIGHT0)
             isLightOn = True
+
     if(key == b'f' or key == b'F'):
         if (isLightOn):
             glDisable(GL_LIGHT0)
@@ -234,9 +234,11 @@ def keyboardEvent(key, x, y):
     if(key == b'i' or key == b'I'):
         if(cameraDist >= 10):
             cameraDist -= 1
+
     if(key == b'o' or key == b'O'):
         if(cameraDist <= 50):
             cameraDist += 1
+
     if(key == b'r' or key == b'R'):
         if(isRotateCamera):
             isRotateCamera = False
@@ -265,7 +267,6 @@ def display():
         if(rotateSpeed >= math.pi):
             rotateSpeed = 0
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    # CAMERA SETTING
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     gluPerspective(60.0, wnd_width / wnd_height, 0.1, 1000)
@@ -295,7 +296,6 @@ def main():
     glutIdleFunc(display)
     glutKeyboardFunc(keyboardEvent)
 
-    # enter main-loop
     glutMainLoop()
 
 if __name__ == '__main__':
